@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.RegisterInfoMapper">
+
+    <!-- 分页获取挂号记录信息 -->
+    <select id="selectRegisterPage" resultType="java.util.LinkedHashMap">
+        select
+        ri.id,
+        ri.user_id,
+        ri.price,
+        ri.register_date,
+        ri.dept_id,
+        ri.staff_id,
+        ri.start_date,
+        ri.end_date,
+        ri.status,
+        ri.pay_date,
+        ri.file,
+        ri.remark,
+        ri.code,
+        ri.drug_price,
+        ri.reference,
+        ri.create_date,
+        ri.schedule_id,
+        oi.offices_name,
+        hi.hospital_name,
+        hi.images as hospitalImages,
+        ui.name,
+        ui.phone,
+        ui.address as userAddress,
+        di.doctor_name,
+        di.images
+        from
+        register_info ri
+        left join office_info oi on
+        (oi.id = ri.dept_id)
+        left join hospital_info hi on
+        (hi.id = oi.hospital_id)
+        left join user_info ui on
+        (ui.id = ri.user_id)
+        left join doctor_info di on
+        (di.id = ri.staff_id)
+        where
+        1 = 1
+        <if test="registerInfo.userName != null and registerInfo.userName != ''">
+            AND ui.name LIKE CONCAT('%',#{registerInfo.userName},'%')
+        </if>
+        <if test="registerInfo.hospitalName != null and registerInfo.hospitalName != ''">
+            AND hi.hospital_name LIKE CONCAT('%',#{registerInfo.hospitalName},'%')
+        </if>
+        <if test="registerInfo.officesName != null and registerInfo.officesName != ''">
+            AND oi.offices_name LIKE CONCAT('%',#{registerInfo.officesName},'%')
+        </if>
+        <if test="registerInfo.status != null and registerInfo.status != ''">
+            AND ri.status = #{registerInfo.status}
+        </if>
+        <if test="registerInfo.hospitalId != null">
+            AND hi.user_id = #{registerInfo.hospitalId}
+        </if>
+        <if test="registerInfo.userId != null">
+            AND ui.user_id = #{registerInfo.userId}
+        </if>
+        <if test="registerInfo.staffId != null">
+            AND di.user_id = #{registerInfo.staffId}
+        </if>
+        order by
+        ri.create_date desc
+    </select>
+
+    <!-- 获取挂号记录 -->
+    <select id="selectRegisterList" resultType="java.util.LinkedHashMap">
+        select
+        ri.id,
+        ri.user_id,
+        ri.price,
+        ri.register_date,
+        ri.dept_id,
+        ri.staff_id,
+        ri.start_date,
+        ri.end_date,
+        ri.status,
+        ri.pay_date,
+        ri.file,
+        ri.remark,
+        ri.code,
+        ri.drug_price,
+        ri.reference,
+        ri.create_date,
+        ri.schedule_id,
+        oi.offices_name,
+        hi.hospital_name,
+        hi.images as hospitalImages,
+        ui.name,
+        ui.phone,
+        ui.address as userAddress,
+        di.doctor_name,
+        di.images
+        from
+        register_info ri
+        left join office_info oi on
+        (oi.id = ri.dept_id)
+        left join hospital_info hi on
+        (hi.id = oi.hospital_id)
+        left join user_info ui on
+        (ui.id = ri.user_id)
+        left join doctor_info di on
+        (di.id = ri.staff_id)
+        where
+        1 = 1
+        <if test="registerIds != null and registerIds.size() != 0">
+            AND ri.id IN
+            <foreach collection="registerIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by
+        ri.create_date desc
+    </select>
+    <!-- 根据时间获取挂号信息 -->
+    <select id="selectRegisterByDate" resultType="cc.mrbird.febs.cos.entity.RegisterInfo">
+        select
+            ri.id,
+            ri.user_id,
+            ri.price,
+            ri.register_date,
+            ri.dept_id,
+            ri.staff_id,
+            ri.start_date,
+            ri.end_date,
+            ri.status,
+            ri.pay_date,
+            ri.file,
+            ri.remark,
+            ri.code,
+            ri.drug_price,
+            ri.reference,
+            ri.create_date,
+            ri.schedule_id
+        from
+            register_info ri
+        where 1 = 1
+        AND ri.status != '0'
+        AND ri.status != '5'
+        <if test="year != null and year != ''">
+            AND YEAR(ri.register_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(ri.register_date) = #{month}
+        </if>
+    </select>
+
+    <!-- 获取本月挂号信息 -->
+    <select id="selectRegisterByMonth" resultType="cc.mrbird.febs.cos.entity.RegisterInfo">
+        select
+            oi.id,
+            oi.user_id,
+            oi.price,
+            oi.register_date,
+            oi.dept_id,
+            oi.staff_id,
+            oi.start_date,
+            oi.end_date,
+            oi.status,
+            oi.pay_date,
+            oi.file,
+            oi.remark,
+            oi.code,
+            oi.drug_price,
+            oi.reference,
+            oi.create_date,
+            oi.schedule_id
+        from
+            register_info oi
+        left join office_info ofi on (ofi.id = oi.dept_id)
+        where
+                DATE_FORMAT( oi.create_date, '%Y%m' ) = DATE_FORMAT(
+                    CURDATE(),
+                    '%Y%m')
+        <if test="hospitalId != null">
+            AND ofi.hospital_id = #{hospitalId}
+        </if>
+    </select>
+
+    <!-- 获取本年挂号信息 -->
+    <select id="selectRegisterByYear" resultType="cc.mrbird.febs.cos.entity.RegisterInfo">
+        select oi.id,
+        oi.user_id,
+        oi.price,
+        oi.register_date,
+        oi.dept_id,
+        oi.staff_id,
+        oi.start_date,
+        oi.end_date,
+        oi.status,
+        oi.pay_date,
+        oi.file,
+        oi.remark,
+        oi.code,
+        oi.drug_price,
+        oi.reference,
+        oi.create_date,
+        oi.schedule_id
+        from register_info oi
+        left join office_info ofi on (ofi.id = oi.dept_id)
+        where DATE_FORMAT(oi.create_date, '%Y') = DATE_FORMAT(
+        CURDATE(),
+        '%Y')
+        <if test="hospitalId != null">
+            AND ofi.hospital_id = #{hospitalId}
+        </if>
+    </select>
+
+    <!-- 根据医生获取挂号信息 -->
+    <select id="selectRegisterByMonthDoctor" resultType="cc.mrbird.febs.cos.entity.RegisterInfo">
+        select
+        ri.id,
+        ri.user_id,
+        ri.price,
+        ri.register_date,
+        ri.dept_id,
+        ri.staff_id,
+        ri.start_date,
+        ri.end_date,
+        ri.status,
+        ri.pay_date,
+        ri.file,
+        ri.remark,
+        ri.code,
+        ri.drug_price,
+        ri.reference,
+        ri.create_date,
+        ri.schedule_id
+        from
+        register_info ri
+        where 1 = 1
+        AND ri.status != '0'
+        AND ri.status != '5'
+        <if test="year != null and year != ''">
+            AND YEAR(ri.register_date) = #{year}
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(ri.register_date) = #{month}
+        </if>
+        AND ri.staff_id = #{doctorId}
+    </select>
+
+    <!-- 挂号数量统计 -->
+    <select id="selectRegisterRateByDay" resultType="java.util.LinkedHashMap">
+        SELECT
+            dateTemp.date AS date,
+	        count( ri.id ) AS count
+        FROM
+            (
+            SELECT
+            date
+            FROM
+            (
+            SELECT
+            DATE_FORMAT( DATE_SUB( last_day( curdate()), INTERVAL xc - 1 DAY ), '%Y-%m-%d' ) AS date
+            FROM
+            (
+            SELECT
+            @xi := @xi + 1 AS xc
+            FROM
+            ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc1,
+            ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc2,
+            ( SELECT @xi := 0 ) xc0
+            ) xcxc
+            ) x0
+            WHERE
+            x0.date >= (
+            SELECT
+            date_add( curdate(), INTERVAL - DAY ( curdate())+ 1 DAY ))) AS dateTemp
+            LEFT JOIN register_info ri ON (
+            DATE_FORMAT( ri.register_date, '%Y-%m-%d' ) = DATE_FORMAT( dateTemp.date, '%Y-%m-%d' )
+            AND ri.STATUS != '0'
+            AND ri.STATUS != '5'
+            )
+        GROUP BY
+            dateTemp.date
+    </select>
+
+    <!-- 排班数量统计 -->
+    <select id="selectScheduleRateByDay" resultType="java.util.LinkedHashMap">
+        SELECT
+            dateTemp.date AS date,
+            count( si.id ) AS count
+        FROM
+            (
+            SELECT
+            date
+            FROM
+            (
+            SELECT
+            DATE_FORMAT( DATE_SUB( last_day( curdate()), INTERVAL xc - 1 DAY ), '%Y-%m-%d' ) AS date
+            FROM
+            (
+            SELECT
+            @xi := @xi + 1 AS xc
+            FROM
+            ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc1,
+            ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc2,
+            ( SELECT @xi := 0 ) xc0
+            ) xcxc
+            ) x0
+            WHERE
+            x0.date >= (
+            SELECT
+            date_add( curdate(), INTERVAL - DAY ( curdate())+ 1 DAY ))) AS dateTemp
+            LEFT JOIN schedule_info si ON (
+            DATE_FORMAT( si.task_date, '%Y-%m-%d' ) = DATE_FORMAT( dateTemp.date, '%Y-%m-%d' ))
+        GROUP BY
+            dateTemp.date
+    </select>
+
+    <!-- 挂号金额统计 -->
+    <select id="selectRegisterPriceByDay" resultType="java.util.LinkedHashMap">
+        SELECT
+            dateTemp.date AS date,
+	        IFNULL( sum( ri.price ), 0 ) AS price
+        FROM
+            (
+            SELECT
+            date
+            FROM
+            (
+            SELECT
+            DATE_FORMAT( DATE_SUB( last_day( curdate()), INTERVAL xc - 1 DAY ), '%Y-%m-%d' ) AS date
+            FROM
+            (
+            SELECT
+            @xi := @xi + 1 AS xc
+            FROM
+            ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc1,
+            ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc2,
+            ( SELECT @xi := 0 ) xc0
+            ) xcxc
+            ) x0
+            WHERE
+            x0.date >= (
+            SELECT
+            date_add( curdate(), INTERVAL - DAY ( curdate())+ 1 DAY ))) AS dateTemp
+            LEFT JOIN register_info ri ON (
+            DATE_FORMAT( ri.register_date, '%Y-%m-%d' ) = DATE_FORMAT( dateTemp.date, '%Y-%m-%d' )
+            AND ri.STATUS != '0'
+            AND ri.STATUS != '5'
+            )
+        GROUP BY
+            dateTemp.date
+    </select>
+
+    <!-- 处方金额统计 -->
+    <select id="selectDrugPriceByDay" resultType="java.util.LinkedHashMap">
+        SELECT dateTemp.date AS date,
+	        IFNULL( sum( ri.drug_price ), 0 ) AS price
+        FROM
+            (
+            SELECT
+            date
+            FROM
+            (
+            SELECT
+            DATE_FORMAT( DATE_SUB( last_day( curdate()), INTERVAL xc - 1 DAY ), '%Y-%m-%d' ) AS date
+            FROM
+            (
+            SELECT
+            @xi := @xi + 1 AS xc
+            FROM
+            ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc1, ( SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 ) xc2, ( SELECT @xi := 0 ) xc0
+            ) xcxc
+            ) x0
+            WHERE
+            x0.date >= (
+            SELECT
+            date_add( curdate(), INTERVAL - DAY ( curdate())+ 1 DAY ))) AS dateTemp
+            LEFT JOIN register_info ri
+        ON (
+            DATE_FORMAT( ri.register_date, '%Y-%m-%d' ) = DATE_FORMAT( dateTemp.date, '%Y-%m-%d' )
+            AND ri.STATUS != '0'
+            AND ri.STATUS != '5'
+            )
+        GROUP BY
+            dateTemp.date
+    </select>
+</mapper>
