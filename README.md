@@ -1,0 +1,2 @@
+# consultation_registration_cos
+基于大数据模型的AI问诊挂号平台
