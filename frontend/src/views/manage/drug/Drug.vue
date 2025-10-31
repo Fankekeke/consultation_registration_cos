@@ -152,10 +152,26 @@ export default {
     columns () {
       return [{
         title: '药品编号',
-        dataIndex: 'code'
+        dataIndex: 'code',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '药品名称',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '所属品牌',
         dataIndex: 'brand'
@@ -240,6 +256,7 @@ export default {
       }, {
         title: '用法',
         dataIndex: 'usages',
+        ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

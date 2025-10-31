@@ -151,32 +151,11 @@ export default {
         title: '采购单号',
         dataIndex: 'code'
       }, {
-        title: '采购药店',
-        dataIndex: 'pharmacyName'
-      }, {
-        title: '图片',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.hospitalUrl && !record.images) return <a-avatar shape="square" icon="user" />
-          if (record.hospitalUrl) return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ record.hospitalUrl } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ record.hospitalUrl } />
-          </a-popover>
-          if (record.images) <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-          </a-popover>
-        }
-      }, {
         title: '采购总价',
         dataIndex: 'totalPrice',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '元'
+            return text + ' 元'
           } else {
             return '- -'
           }
@@ -186,7 +165,7 @@ export default {
         dataIndex: 'amount',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text
+            return text + ' 件'
           } else {
             return '- -'
           }

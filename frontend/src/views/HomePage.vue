@@ -22,6 +22,7 @@
             <a-row class="more-info" v-if="user.roleId == 74">
               <a-col :span="4"></a-col>
               <a-col :span="4"></a-col>
+              <a-col :span="4"></a-col>
               <a-col :span="4">
                 <head-info title="总挂号数量" :content="titleData.registerNum" :center="false" :bordered="false"/>
               </a-col>
@@ -30,9 +31,6 @@
               </a-col>
               <a-col :span="4">
                 <head-info title="医生数量" :content="titleData.doctorNum" :center="false" :bordered="false"/>
-              </a-col>
-              <a-col :span="4">
-                <head-info title="医院数量" :content="titleData.hospitalNum" :center="false"/>
               </a-col>
             </a-row>
           </div>

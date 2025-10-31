@@ -15,14 +15,6 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="所属医院"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.hospitalName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="所属科室"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
@@ -153,20 +145,18 @@ export default {
     columns () {
       return [{
         title: '用户姓名',
-        dataIndex: 'name'
-      }, {
-        title: '联系方式',
-        dataIndex: 'phone',
+        dataIndex: 'name',
+        ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
+          if (text !== null && text !== '') {
             return text
           } else {
-            return '- -'
+            return '-'
           }
         }
       }, {
-        title: '所属医院',
-        dataIndex: 'hospitalName',
+        title: '联系方式',
+        dataIndex: 'phone',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -199,11 +189,12 @@ export default {
       }, {
         title: '科室名称',
         dataIndex: 'officesName',
+        ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
+          if (text !== null && text !== '') {
             return text
           } else {
-            return '- -'
+            return '-'
           }
         }
       }, {
@@ -211,7 +202,7 @@ export default {
         dataIndex: 'price',
         customRender: (text, row, index) => {
           if (text !== null) {
-            return text + '元'
+            return text + ' 元'
           } else {
             return '- -'
           }
@@ -240,21 +231,23 @@ export default {
       }, {
         title: '预约时间',
         dataIndex: 'registerDate',
+        ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
+          if (text !== null && text !== '') {
             return text
           } else {
-            return '- -'
+            return '-'
           }
         }
       }, {
         title: '挂号时间',
         dataIndex: 'startDate',
+        ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
-            return row.startDate + '~' + row.endDate
+          if (text !== null && text !== '') {
+            return text
           } else {
-            return '- -'
+            return '-'
           }
         }
       }, {

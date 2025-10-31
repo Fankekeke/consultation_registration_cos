@@ -31,22 +31,6 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item label='所属医院' v-bind="formItemLayout">
-              <a-select
-                show-search
-                option-filter-prop="children"
-                :filter-option="false"
-                :not-found-content="fetching ? undefined : null"
-                @search="fetchUser"
-                @change="hospitalCheck" v-decorator="[
-              'hospitalId',
-              { rules: [{ required: true, message: '请输入所属医院!' }] }
-              ]">
-                <a-select-option :value="item.id" v-for="(item, index) in hospitalList" :key="index">{{ item.hospitalName }}</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :span="8">
             <a-form-item label='所属科室' v-bind="formItemLayout">
               <a-select @change="officesCheck" v-decorator="[
                 'officesId',
@@ -192,28 +176,6 @@ export default {
   mounted () {
   },
   methods: {
-    fetchUser (value) {
-      if (value) {
-        this.lastFetchId += 1;
-        const fetchId = this.lastFetchId;
-        this.data = [];
-        this.fetching = true;
-        this.$get(`/cos/hospital-info/list/key/${value}`).then((r) => {
-          this.hospitalList = r.data.data
-
-          if (fetchId !== this.lastFetchId) {
-            // for fetch callback order
-            return;
-          }
-          const data = body.results.map(item => ({
-            text: `${item.hospitalName} ${item.hospitalNature}`,
-            value: item.id,
-          }));
-          this.hospitalList = data;
-          this.fetching = false;
-        })
-      }
-    },
     selectHospitalList () {
       this.$get('/cos/hospital-info/list').then((r) => {
         this.hospitalList = r.data.data
@@ -283,8 +245,7 @@ export default {
           obj[key] = doctor[key]
         }
         if (key === 'hospitalId' && doctor['hospitalId'] != null && doctor['hospitalName'] != null) {
-          this.fetchUser(doctor['hospitalName'])
-          this.selectOfficeList(doctor['hospitalId'])
+          this.selectOfficeList(1043)
         }
       })
       setTimeout(() => {

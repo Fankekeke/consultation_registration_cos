@@ -15,14 +15,6 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="所属医院"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.hospitalName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="科室名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
@@ -148,19 +140,51 @@ export default {
     columns () {
       return [{
         title: '科室名称',
-        dataIndex: 'officesName'
-      }, {
-        title: '所属医院',
-        dataIndex: 'hospitalName'
+        dataIndex: 'officesName',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '医生人数',
         dataIndex: 'doctorNum'
       }, {
         title: '荣誉资质',
-        dataIndex: 'officesHonor'
+        dataIndex: 'officesHonor',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '科室设备',
-        dataIndex: 'officesEquipment'
+        dataIndex: 'officesEquipment',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
+      }, {
+        title: '关于',
+        dataIndex: 'officesAbout',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '医院图片',
         dataIndex: 'images',

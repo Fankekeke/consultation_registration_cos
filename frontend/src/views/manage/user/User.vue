@@ -47,7 +47,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -147,10 +147,26 @@ export default {
     columns () {
       return [{
         title: '用户编号',
-        dataIndex: 'code'
+        dataIndex: 'code',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '用户姓名',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '性别',
         dataIndex: 'sex',
@@ -178,10 +194,26 @@ export default {
         }
       }, {
         title: '联系方式',
-        dataIndex: 'phone'
+        dataIndex: 'phone',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '地址',
-        dataIndex: 'address'
+        dataIndex: 'address',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '省份',
         dataIndex: 'province'
@@ -194,11 +226,12 @@ export default {
       }, {
         title: '注册时间',
         dataIndex: 'createDate',
+        ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
+          if (text !== null && text !== '') {
             return text
           } else {
-            return '- -'
+            return '-'
           }
         }
       }, {

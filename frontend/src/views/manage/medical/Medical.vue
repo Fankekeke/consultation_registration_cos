@@ -142,7 +142,8 @@ export default {
     columns () {
       return [{
         title: '标题',
-        dataIndex: 'title'
+        dataIndex: 'title',
+        ellipsis: true
       }, {
         title: '浏览量',
         dataIndex: 'views',

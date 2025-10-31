@@ -13,14 +13,6 @@
                 <a-input v-model="queryParams.drugName"/>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="医院名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.pharmacyName"/>
-              </a-form-item>
-            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -145,17 +137,27 @@ export default {
           }
         }
       }, {
-        title: '医院名称',
-        dataIndex: 'pharmacyName'
-      }, {
-        title: '医院编号',
-        dataIndex: 'pharmacyCode'
-      }, {
         title: '药品名称',
-        dataIndex: 'drugName'
+        dataIndex: 'drugName',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '品牌',
-        dataIndex: 'brand'
+        dataIndex: 'brand',
+        ellipsis: true,
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '药品图片',
         dataIndex: 'images',

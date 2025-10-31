@@ -7,14 +7,6 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="医院名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.shopName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="状态"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
@@ -133,14 +125,9 @@ export default {
     }),
     columns () {
       return [{
-        title: '医院名称',
-        dataIndex: 'shopName'
-      }, {
-        title: '医院地址',
-        dataIndex: 'address'
-      }, {
         title: '预警内容',
         dataIndex: 'remark',
+        width: 300,
         scopedSlots: { customRender: 'contentShow' }
       }, {
         title: '发布时间',

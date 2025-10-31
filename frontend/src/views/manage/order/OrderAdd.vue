@@ -11,53 +11,7 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="10">
         <a-divider orientation="left">
-          <span style="font-size: 13px">选择医院</span>
-        </a-divider>
-        <a-col :span="12">
-          <a-form-item label='所属医院' v-bind="formItemLayout">
-            <a-select
-              show-search
-              option-filter-prop="children"
-              :filter-option="false"
-              :not-found-content="fetching ? undefined : null"
-              @search="fetchUser"
-              @change="hospitalCheck" v-decorator="[
-              'pharmacyId',
-              { rules: [{ required: true, message: '请输入所属医院!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in hospitalList" :key="index">{{ item.hospitalName }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label='员工'>
-            <a-select v-decorator="[
-              'staffId',
-              { rules: [{ required: true, message: '请输入所属员工!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in staffList" :key="index">{{
-                  item.name
-                }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row :gutter="10" style="font-size: 13px;font-family: SimHei" v-if="pharmacyInfo != null">
-        <a-col :span="8"><b>医院地区：</b>
-          {{ pharmacyInfo.hospitalArea }}
-        </a-col>
-        <a-col :span="8"><b>医院类型：</b>
-          {{ pharmacyInfo.hospitalNature }}
-        </a-col>
-        <a-col :span="8"><b>医院等级：</b>
-          {{ pharmacyInfo.hospitalGrade }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row :gutter="10">
-        <a-divider orientation="left">
-          <span style="font-size: 13px">药品信息</span>
+          <span style="font-size: 15px;font-weight: bold;">药品选购</span>
         </a-divider>
         <a-col :span="24">
           <a-table :columns="columns" :data-source="dataList" :pagination="false">
@@ -203,6 +157,7 @@ export default {
     }
   },
   mounted () {
+    this.getDrug(1043)
   },
   methods: {
     handleChange (value, record) {
@@ -224,29 +179,7 @@ export default {
     dataAdd () {
       this.dataList.push({drugId: null, quantity: 1, brand: '', classification: '', dosageForm: '', unitPrice: ''})
     },
-    fetchUser (value) {
-      if (value) {
-        this.lastFetchId += 1;
-        const fetchId = this.lastFetchId;
-        this.data = [];
-        this.fetching = true;
-        this.$get(`/cos/hospital-info/list/key/${value}`).then((r) => {
-          this.hospitalList = r.data.data
-
-          if (fetchId !== this.lastFetchId) {
-            // for fetch callback order
-            return;
-          }
-          const data = body.results.map(item => ({
-            text: `${item.hospitalName} ${item.hospitalNature}`,
-            value: item.id,
-          }));
-          this.hospitalList = data;
-          this.fetching = false;
-        })
-      }
-    },
-    filterOption(input, option) {
+    filterOption (input, option) {
       return (
         option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       )
@@ -256,7 +189,6 @@ export default {
         this.hospitalList.forEach(e => {
           if (e.id === value) {
             this.pharmacyInfo = e
-            this.getDrug(e.id)
             this.getStaff(e.id)
           }
         })
@@ -276,31 +208,6 @@ export default {
       this.$get('/cos/pharmacy-info/list').then((r) => {
         this.pharmacyList = r.data.data
       })
-    },
-    handlerClosed (localPoint) {
-      this.childrenDrawer = false
-      if (localPoint !== null && localPoint !== undefined) {
-        this.localPoint = localPoint
-        console.log(this.localPoint)
-        let address = baiduMap.getAddress(localPoint)
-        address.getLocation(localPoint, (rs) => {
-          if (rs != null) {
-            if (rs.address !== undefined && rs.address.length !== 0) {
-              this.stayAddress = rs.address
-            }
-            if (rs.surroundingPois !== undefined) {
-              if (rs.surroundingPois.address !== undefined && rs.surroundingPois.address.length !== 0) {
-                this.stayAddress = rs.surroundingPois.address
-              }
-            }
-            let obj = {}
-            obj['address'] = this.stayAddress
-            obj['longitude'] = localPoint.lng
-            obj['latitude'] = localPoint.lat
-            this.form.setFieldsValue(obj)
-          }
-        })
-      }
     },
     showChildrenDrawer () {
       this.childrenDrawer = true
@@ -332,6 +239,7 @@ export default {
     handleSubmit () {
       this.form.validateFields((err, values) => {
         values.orderDetailList = JSON.stringify(this.dataList)
+        values.pharmacyId = 1043
         if (!err) {
           this.loading = true
           this.$post('/cos/order-info/platform', {

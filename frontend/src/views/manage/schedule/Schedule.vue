@@ -31,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -55,8 +55,8 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="cloud" @click="handleViewOpen(record)" title="详 情"></a-icon>
-<!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>-->
+          <a-icon type="cloud" @click="handleViewOpen(record)" title="详 情" style="margin-right: 15px"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
         </template>
       </a-table>
     </div>
@@ -131,19 +131,6 @@ export default {
       return [{
         title: '排班名称',
         dataIndex: 'name'
-      }, {
-        title: '排班编号',
-        dataIndex: 'code'
-      }, {
-        title: '所属医院',
-        dataIndex: 'hospitalName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
       }, {
         title: '医生姓名',
         dataIndex: 'doctorName',
@@ -344,6 +331,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
+      params.hospitalId = this.currentUser.userId
       this.$get('/cos/schedule-info/page', {
         ...params
       }).then((r) => {

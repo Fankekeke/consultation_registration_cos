@@ -19,22 +19,6 @@
           </a-form-item>
         </a-col>
         <a-col :span="8">
-          <a-form-item label='所属医院' v-bind="formItemLayout">
-            <a-select
-              show-search
-              option-filter-prop="children"
-              :filter-option="false"
-              :not-found-content="fetching ? undefined : null"
-              @search="fetchUser"
-              @change="hospitalCheck" v-decorator="[
-              'hospitalId',
-              { rules: [{ required: true, message: '请输入所属医院!' }] }
-              ]">
-              <a-select-option :value="item.id" v-for="(item, index) in hospitalList" :key="index">{{ item.hospitalName }}</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
           <a-form-item label='医生人数' v-bind="formItemLayout">
             <a-input v-decorator="[
             'doctorNum',
@@ -80,7 +64,7 @@
 </template>
 
 <script>
-import debounce from 'lodash/debounce';
+import debounce from 'lodash/debounce'
 import {mapState} from 'vuex'
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
@@ -114,8 +98,8 @@ export default {
     }
   },
   data () {
-    this.lastFetchId = 0;
-    this.fetchUser = debounce(this.fetchUser, 800);
+    this.lastFetchId = 0
+    this.fetchUser = debounce(this.fetchUser, 800)
     return {
       formItemLayout,
       form: this.$form.createForm(this),
@@ -134,27 +118,27 @@ export default {
   methods: {
     fetchUser (value) {
       if (value) {
-        this.lastFetchId += 1;
-        const fetchId = this.lastFetchId;
-        this.data = [];
-        this.fetching = true;
+        this.lastFetchId += 1
+        const fetchId = this.lastFetchId
+        this.data = []
+        this.fetching = true
         this.$get(`/cos/hospital-info/list/key/${value}`).then((r) => {
           this.hospitalList = r.data.data
 
           if (fetchId !== this.lastFetchId) {
             // for fetch callback order
-            return;
+            return
           }
           const data = body.results.map(item => ({
             text: `${item.hospitalName} ${item.hospitalNature}`,
-            value: item.id,
-          }));
-          this.hospitalList = data;
-          this.fetching = false;
+            value: item.id
+          }))
+          this.hospitalList = data
+          this.fetching = false
         })
       }
     },
-    filterOption(input, option) {
+    filterOption (input, option) {
       return (
         option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
       )
@@ -208,7 +192,7 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
-        values.hospitalName = this.hospitalInfo.hospitalName
+        values.hospitalId = 1043
         if (!err) {
           this.loading = true
           this.$post('/cos/office-info', {

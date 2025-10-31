@@ -15,14 +15,6 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="所属医院"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.hospitalName"/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
                 label="科室名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
@@ -137,30 +129,37 @@ export default {
     }),
     columns () {
       return [{
-        title: '医生编号',
-        dataIndex: 'code',
+        title: '医生姓名',
+        ellipsis: true,
+        dataIndex: 'doctorName'
+      }, {
+        title: '医生信息',
+        dataIndex: 'doctorAbout',
+        ellipsis: true,
         customRender: (text, row, index) => {
-          if (text !== null) {
+          if (text !== null && text !== '') {
             return text
           } else {
-            return '- -'
+            return '-'
           }
         }
-      }, {
-        title: '医生姓名',
-        dataIndex: 'doctorName'
       }, {
         title: '性别',
         dataIndex: 'doctorSex'
       }, {
-        title: '所属医院',
-        dataIndex: 'hospitalName'
-      }, {
         title: '所属科室',
+        ellipsis: true,
         dataIndex: 'officesName'
       }, {
         title: '医生类别',
-        dataIndex: 'doctorTitle'
+        dataIndex: 'doctorTitle',
+        customRender: (text, row, index) => {
+          if (text !== null && text !== '') {
+            return text
+          } else {
+            return '-'
+          }
+        }
       }, {
         title: '医生图片',
         dataIndex: 'images',
