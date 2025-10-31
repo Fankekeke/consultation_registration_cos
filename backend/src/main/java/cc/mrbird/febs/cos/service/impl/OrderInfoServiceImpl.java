@@ -66,7 +66,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     /**
      * 分页获取订单信息
      *
-     * @param page     分页对象
+     * @param page      分页对象
      * @param orderInfo 订单信息
      * @return 结果
      */
@@ -114,7 +114,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
      * 添加订单信息
      *
      * @param orderInfoVo 订单信息
-     * @param flag 是否付款完成（0.否 1.是）
+     * @param flag        是否付款完成（0.否 1.是）
      * @return 结果
      */
     @Override
@@ -620,10 +620,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         // 获取订单信息
         OrderInfo orderInfo = this.getOne(Wrappers.<OrderInfo>lambdaQuery().eq(OrderInfo::getCode, orderCode));
-//        if (StrUtil.isEmpty(staffCode)) {
-//            List<StaffInfo> staffInfoList = staffInfoMapper.selectList(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getPharmacyId, orderInfo.getPharmacyId()));
-//            staffCode = staffInfoList.get(0).getCode();
-//        }
         // 订单详情
         List<OrderDetail> detailList = orderDetailService.list(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, orderInfo.getId()));
         Map<Integer, Integer> detailMap = detailList.stream().collect(Collectors.toMap(OrderDetail::getDrugId, OrderDetail::getQuantity));
@@ -631,14 +627,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         List<PharmacyInventory> inventoryList = pharmacyInventoryService.list(Wrappers.<PharmacyInventory>lambdaQuery().in(PharmacyInventory::getDrugId, detailMap.keySet()).eq(PharmacyInventory::getPharmacyId, orderInfo.getPharmacyId()));
         List<InventoryStatistics> statisticsList = new ArrayList<>();
 
-        String finalStaffCode = staffCode;
         inventoryList.forEach(e -> {
             InventoryStatistics inventoryStatistics = new InventoryStatistics();
             inventoryStatistics.setDrugId(e.getDrugId());
             inventoryStatistics.setPharmacyId(e.getPharmacyId());
             inventoryStatistics.setQuantity(detailMap.get(e.getDrugId()));
             inventoryStatistics.setStorageType(1);
-            inventoryStatistics.setCustodian(finalStaffCode);
+            inventoryStatistics.setCustodian(staffCode);
             inventoryStatistics.setCreateDate(DateUtil.formatDateTime(new Date()));
             statisticsList.add(inventoryStatistics);
             e.setReserve(e.getReserve() - detailMap.get(e.getDrugId()));
@@ -750,7 +745,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             this.save(orderItem);
             // 总价格
             BigDecimal totalCost = BigDecimal.ZERO;
-            for (OrderSubVo orderSubItem: value) {
+            for (OrderSubVo orderSubItem : value) {
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setDrugId(orderSubItem.getDrugId());
                 orderDetail.setQuantity(orderSubItem.getTotal().intValue());
