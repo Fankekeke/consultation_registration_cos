@@ -127,7 +127,7 @@ export default {
       return [{
         title: '预警内容',
         dataIndex: 'remark',
-        width: 300,
+        width: 500,
         scopedSlots: { customRender: 'contentShow' }
       }, {
         title: '发布时间',
@@ -138,13 +138,16 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '药品名称',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        ellipsis: true,
       }, {
         title: '所属品牌',
-        dataIndex: 'brand'
+        dataIndex: 'brand',
+        ellipsis: true
       }, {
         title: '药品图片',
         dataIndex: 'images',
