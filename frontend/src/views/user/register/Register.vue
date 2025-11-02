@@ -149,16 +149,6 @@ export default {
           }
         }
       }, {
-        title: '所属医院',
-        dataIndex: 'hospitalName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
         title: '医生姓名',
         dataIndex: 'doctorName',
         customRender: (text, row, index) => {
@@ -189,7 +179,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '挂号金额',
         dataIndex: 'price',
@@ -240,7 +231,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',

@@ -53,4 +53,44 @@
         order by
         create_date desc
     </select>
+
+    <!-- 根据用户ID查询 -->
+    <select id="queryByUserId" resultType="java.util.LinkedHashMap">
+        select
+        mi.id,
+        mi.code,
+        mi.cause,
+        mi.user_id,
+        mi.check_issuer,
+        mi.check_agency,
+        mi.status,
+        mi.create_date,
+        mi.order_code,
+        mi.symptom,
+        di.doctor_name,
+        di.doctor_img,
+        di.images as doctorImages,
+        hi.hospital_name,
+        hi.hospital_img,
+        hi.images as hospitalImages,
+        ui.name as userName,
+        ui.phone,
+        ui.address,
+        ui.images as userImages
+        from
+        medication_info mi
+        left join user_info ui on
+        (ui.id = mi.user_id)
+        left join doctor_info di on
+        (di.id = mi.check_issuer)
+        left join hospital_info hi on
+        (hi.id = mi.check_agency)
+        where
+        1 = 1
+        <if test="userId != null">
+            AND mi.user_id = #{userId}
+        </if>
+        order by
+        create_date desc
+    </select>
 </mapper>

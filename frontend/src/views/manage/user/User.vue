@@ -72,8 +72,8 @@
         <template slot="operation" slot-scope="text, record">
           <a-icon type="cloud" @click="handleUserViewOpen(record)" title="详 情" style="margin-right: 10px"></a-icon>
           <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改" style="margin-right: 10px"></a-icon>
-          <a-icon v-if="record.status == 0" type="caret-up" @click="audit(record.id, 1)" title="up" style="margin-right: 10px"></a-icon>
-          <a-icon v-if="record.status == 1" type="caret-down" @click="audit(record.id, 0)" title="down" style="margin-right: 10px"></a-icon>
+<!--          <a-icon v-if="record.status == 0" type="caret-up" @click="audit(record.id, 1)" title="up" style="margin-right: 10px"></a-icon>-->
+<!--          <a-icon v-if="record.status == 1" type="caret-down" @click="audit(record.id, 0)" title="down" style="margin-right: 10px"></a-icon>-->
         </template>
       </a-table>
     </div>

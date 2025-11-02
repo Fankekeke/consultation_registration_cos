@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author FanK
@@ -26,5 +27,16 @@ public class MedicationInfoServiceImpl extends ServiceImpl<MedicationInfoMapper,
     @Override
     public IPage<LinkedHashMap<String, Object>> selectMedicationPage(Page<MedicationInfo> page, MedicationInfo medicationInfo) {
         return baseMapper.selectMedicationPage(page, medicationInfo);
+    }
+
+    /**
+     * 根据用户ID查询
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @Override
+    public List<LinkedHashMap<String, Object>> queryByUserId(Integer userId) {
+        return baseMapper.queryByUserId(userId);
     }
 }

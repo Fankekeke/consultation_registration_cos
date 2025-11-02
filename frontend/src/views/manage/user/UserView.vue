@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="用户详情" @cancel="onClose" :width="1200">
+  <a-modal v-model="show" title="用户详情" @cancel="onClose" :width="1000">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -101,7 +101,7 @@ export default {
         scopedSlots: { customRender: 'contentShow' }
       }, {
         title: '出具人',
-        dataIndex: 'checkIssuer',
+        dataIndex: 'doctorName',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -110,8 +110,8 @@ export default {
           }
         }
       }, {
-        title: '出具机构',
-        dataIndex: 'checkAgency',
+        title: '症状',
+        dataIndex: 'symptom',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -127,19 +127,6 @@ export default {
             return text
           } else {
             return '- -'
-          }
-        }
-      }, {
-        title: '状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case 0:
-              return <a-tag color='red'>未处理</a-tag>
-            case 1:
-              return <a-tag color='green'>已处理</a-tag>
-            default:
-              return '- -'
           }
         }
       }]

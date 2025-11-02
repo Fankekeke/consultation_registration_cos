@@ -13,14 +13,6 @@
                 <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="排班编号"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.code"/>
-              </a-form-item>
-            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -130,20 +122,8 @@ export default {
     columns () {
       return [{
         title: '排班名称',
-        dataIndex: 'name'
-      }, {
-        title: '排班编号',
-        dataIndex: 'code'
-      }, {
-        title: '所属医院',
-        dataIndex: 'hospitalName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
+        dataIndex: 'name',
+        ellipsis: true
       }, {
         title: '医生姓名',
         dataIndex: 'doctorName',

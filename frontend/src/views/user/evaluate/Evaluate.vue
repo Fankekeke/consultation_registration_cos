@@ -13,14 +13,6 @@
                 <a-input v-model="queryParams.orderCode"/>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="医院名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.pharmacyName"/>
-              </a-form-item>
-            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -115,9 +107,6 @@ export default {
       }, {
         title: '评价客户',
         dataIndex: 'name'
-      }, {
-        title: '医院名称',
-        dataIndex: 'pharmacyName'
       }, {
         title: '评价得分',
         dataIndex: 'score',

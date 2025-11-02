@@ -27,6 +27,7 @@
     "es6-promise": "^4.2.8",
     "vue": "2.6.10",
     "vue-apexcharts": "^1.6.2",
+    "vue-markdown": "^2.2.4",
     "vue-meta": "^2.3.3",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.16.0",

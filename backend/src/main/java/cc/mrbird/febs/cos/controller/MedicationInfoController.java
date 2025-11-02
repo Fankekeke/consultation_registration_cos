@@ -5,6 +5,7 @@ import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.MedicationInfo;
 import cc.mrbird.febs.cos.service.IMedicationInfoService;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,16 @@ public class MedicationInfoController {
     @GetMapping("/page")
     public R page(Page<MedicationInfo> page, MedicationInfo medicationInfo) {
         return R.ok(medicationInfoService.selectMedicationPage(page, medicationInfo));
+    }
+
+    /**
+     * 查询电子处方信息列表
+     *
+     * @return 结果
+     */
+    @GetMapping("/list/byUser/{userId}")
+    public R byUserList(@PathVariable Integer userId) {
+        return R.ok(medicationInfoService.queryByUserId(userId));
     }
 
     /**

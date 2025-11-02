@@ -13,14 +13,6 @@
                 <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item
-                label="医院名称"
-                :labelCol="{span: 5}"
-                :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.pharmacyName"/>
-              </a-form-item>
-            </a-col>
           </div>
           <span style="float: right; margin-top: 3px;">
             <a-button type="primary" @click="search">查询</a-button>
@@ -170,16 +162,6 @@ export default {
       }, {
         title: '收获地址',
         dataIndex: 'userAddress',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
-        title: '所属医院',
-        dataIndex: 'pharmacyName',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text

@@ -158,16 +158,6 @@ export default {
           }
         }
       }, {
-        title: '所属医院',
-        dataIndex: 'hospitalName',
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
         title: '医生姓名',
         dataIndex: 'doctorName',
         customRender: (text, row, index) => {
@@ -192,6 +182,7 @@ export default {
       }, {
         title: '科室名称',
         dataIndex: 'officesName',
+        ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -249,7 +240,8 @@ export default {
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',
