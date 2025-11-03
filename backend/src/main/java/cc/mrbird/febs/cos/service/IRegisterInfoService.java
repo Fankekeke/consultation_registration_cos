@@ -25,6 +25,14 @@ public interface IRegisterInfoService extends IService<RegisterInfo> {
     IPage<LinkedHashMap<String, Object>> selectRegisterPage(Page<RegisterInfo> page, RegisterInfo registerInfo);
 
     /**
+     * 根据用户ID获取挂号记录
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectRegisterListByUserId(Integer userId);
+
+    /**
      * 获取挂号排名
      *
      * @param year  年份

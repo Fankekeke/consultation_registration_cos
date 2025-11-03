@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -52,6 +53,18 @@ public class RegisterInfoController {
     @GetMapping("/page")
     public R page(Page<RegisterInfo> page, RegisterInfo registerInfo) {
         return R.ok(registerInfoService.selectRegisterPage(page, registerInfo));
+    }
+
+    /**
+     * 按用户查询挂号记录
+     *
+     * @param userId 用户ID
+     * @return 挂号记录
+     */
+    @GetMapping("/selectRegisterListByUserId")
+    public R selectRegisterListByUserId(@RequestParam("userId") Integer userId) {
+        List<LinkedHashMap<String, Object>> registerInfoList = registerInfoService.selectRegisterListByUserId(userId);
+        return R.ok(registerInfoList);
     }
 
     /**

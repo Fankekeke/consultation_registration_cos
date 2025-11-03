@@ -1,44 +1,32 @@
 <template>
   <div>
-    <a-row v-if="user.roleId == 75" style="width: 100%;margin-top: 30px;margin-bottom: 50px">
-<!--      <div>-->
-<!--        <a-col :span="22" v-if="newsList.length > 0">-->
-<!--          <a-alert-->
-<!--            banner-->
-<!--            :message="newsContent"-->
-<!--            type="info"-->
-<!--          />-->
-<!--        </a-col>-->
-<!--        <a-col :span="2">-->
-<!--          <a-button type="primary" style="margin-top: 2px;margin-left: 10px" @click="newsNext">下一页</a-button>-->
-<!--        </a-col>-->
-<!--      </div>-->
-<!--      <br/>-->
-<!--      <br/>-->
-      <a-col :span="12" v-if="doctorInfo != null" style="margin-top: 30px">
-        <a-card :bordered="false">
+    <a-row v-if="user.roleId == 75" style="width: 100%;margin-bottom: 50px">
+      <a-col :span="12" v-if="doctorInfo != null" style="margin-top: 10px">
+        <a-card :bordered="false" class="doctor-info-card">
           <a-row>
             <a-col :span="5">
-              <a-avatar :src="'http://127.0.0.1:9527/imagesWeb/' + doctorInfo.images" shape="square" style="width: 100px;height: 100px;"/>
+              <a-avatar :src="'http://127.0.0.1:9527/imagesWeb/' + doctorInfo.images"
+                        shape="square"
+                        style="width: 100px;height: 100px;"
+                        class="doctor-avatar"/>
             </a-col>
-            <a-col :span="12">
-              <div style="font-size: 20px;font-family: SimHei">{{ doctorInfo.doctorName }}</div>
-              <p style="font-size: 13px;font-family: SimHei">{{ doctorInfo.hospitalName }}</p>
-              <p style="font-size: 13px;font-family: SimHei">{{ doctorInfo.officesName }}</p>
-              <p style="font-size: 13px;font-family: SimHei">{{ doctorInfo.doctorTitle }}</p>
+            <a-col :span="12" class="doctor-details">
+              <div class="doctor-name">{{ doctorInfo.doctorName }}</div>
+              <p class="doctor-hospital">{{ doctorInfo.hospitalName }}</p>
+              <p class="doctor-office">{{ doctorInfo.officesName }}</p>
             </a-col>
           </a-row>
         </a-card>
       </a-col>
       <a-col :span="24" style="padding-left: 10px">
-        <div style="font-size: 20px;font-family: SimHei;margin-top: 10px">我的排班</div>
-        <div style="background:#ECECEC; padding:30px;margin-top: 30px">
-          <a-card :bordered="false">
+        <div class="section-title">我的排班</div>
+        <div class="calendar-container">
+          <a-card :bordered="false" class="calendar-card">
             <a-spin :spinning="dataLoading">
-              <a-calendar>
+              <a-calendar class="custom-calendar">
                 <ul slot="dateCellRender" slot-scope="value" class="events">
-                  <li v-for="item in getListData(value)" :key="item.content">
-                    <a-badge :status="item.type" :text="item.content" />
+                  <li v-for="item in getListData(value)" :key="item.content" class="event-item">
+                    <a-badge :status="item.type" :text="item.content" class="event-badge" />
                   </li>
                 </ul>
               </a-calendar>
@@ -49,24 +37,25 @@
       <br/>
       <br/>
       <a-col :span="24" style="padding-left: 10px">
-        <div style="font-size: 20px;font-family: SimHei;margin-top: 30px;margin-bottom: 18px">待挂号</div>
-        <a-row>
+        <div class="section-title">待挂号</div>
+        <a-row :gutter="[24, 24]" v-if="registerList && registerList.length > 0">
           <a-col :span="6" v-for="(item, index) in registerList" :key="index">
-            <a-card :bordered="true" hoverable>
-<!--              <a-carousel autoplay style="height: 150px;" v-if="item.images !== undefined && item.images">-->
-<!--                <div style="width: 100%;height: 150px" v-for="(item, index) in item.images.split(',')" :key="index">-->
-<!--                  <img :src="'http://127.0.0.1:9527/imagesWeb/'+item" style="width: 100%;height: 250px">-->
-<!--                </div>-->
-<!--              </a-carousel>-->
-              <a-card-meta :title="item.name + ' - ' + item.registerDate" :description="item.hospitalName + ' - ' + item.officesName" style="margin-top: 10px"></a-card-meta>
-              <div style="font-size: 12px;font-family: SimHei;margin-top: 8px">
-                <span>{{ item.startDate }} ~ {{ item.endDate }} </span> |
-                <span>联系方式 - {{ item.phone }}</span> |
-                <span style="color: #f5222d; font-size: 13px;">{{ item.doctorName }}</span>
+            <a-card :bordered="true" hoverable class="register-card">
+              <a-card-meta :title="item.name + ' - ' + item.registerDate"
+                           :description="item.hospitalName + ' - ' + item.officesName"
+                           class="register-meta"></a-card-meta>
+              <div class="register-details">
+                <span class="time-slot">{{ item.startDate }} ~ {{ item.endDate }}</span> |
+                <span class="contact-info">联系方式 - {{ item.phone }}</span> |
+                <span class="doctor-name-highlight">{{ item.doctorName }}</span>
               </div>
             </a-card>
           </a-col>
         </a-row>
+        <!-- 空状态展示 -->
+        <a-empty v-else description="暂无待挂号信息" class="empty-register-state">
+          <div class="empty-description">当前没有待处理的挂号信息</div>
+        </a-empty>
       </a-col>
     </a-row>
     <a-row style="margin-top: 15px" v-if="user.roleId == 74 || user.roleId == 77">
@@ -146,51 +135,59 @@
         <div style="background: #ECECEC; padding: 30px;" v-if="user.roleId == 75">
           <a-row :gutter="16">
             <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">排班量</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
+              <a-card hoverable class="statistic-card">
+                <div class="statistic-icon schedule-icon">
+                  <a-icon type="calendar" />
+                </div>
+                <div class="statistic-content">
+                  <div class="statistic-title">排班量</div>
+                  <div class="statistic-value">
                     {{ studentTitleData.scheduleNum }}
-                    <span style="font-size: 20px;margin-top: 3px">次</span>
-                  </a-col>
-                </a-row>
+                    <span class="statistic-unit">次</span>
+                  </div>
+                </div>
               </a-card>
             </a-col>
             <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">总挂号</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
+              <a-card hoverable class="statistic-card">
+                <div class="statistic-icon register-icon">
+                  <a-icon type="usergroup-add" />
+                </div>
+                <div class="statistic-content">
+                  <div class="statistic-title">总挂号</div>
+                  <div class="statistic-value">
                     {{ studentTitleData.registerNum }}
-                    <span style="font-size: 20px;margin-top: 3px">次</span>
-                  </a-col>
-                </a-row>
+                    <span class="statistic-unit">次</span>
+                  </div>
+                </div>
               </a-card>
             </a-col>
             <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月处方金额</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
+              <a-card hoverable class="statistic-card">
+                <div class="statistic-icon prescription-icon">
+                  <a-icon type="medicine-box" />
+                </div>
+                <div class="statistic-content">
+                  <div class="statistic-title">本月处方金额</div>
+                  <div class="statistic-value">
                     {{ studentTitleData.totalCost }}
-                    <span style="font-size: 20px;margin-top: 3px">元</span>
-                  </a-col>
-                </a-row>
+                    <span class="statistic-unit">元</span>
+                  </div>
+                </div>
               </a-card>
             </a-col>
             <a-col :span="6">
-              <a-card hoverable>
-                <a-row>
-                  <a-col :span="24" style="font-size: 13px;margin-bottom: 8px;font-family: SimHei">本月挂号金额</a-col>
-                  <a-col :span="4"><a-icon type="arrow-up" style="font-size: 30px;margin-top: 3px"/></a-col>
-                  <a-col :span="18" style="font-size: 28px;font-weight: 500;font-family: SimHei">
+              <a-card hoverable class="statistic-card">
+                <div class="statistic-icon income-icon">
+                  <a-icon type="pay-circle" />
+                </div>
+                <div class="statistic-content">
+                  <div class="statistic-title">本月挂号金额</div>
+                  <div class="statistic-value">
                     {{ studentTitleData.totalRegisterCost }}
-                    <span style="font-size: 20px;margin-top: 3px">元</span>
-                  </a-col>
-                </a-row>
+                    <span class="statistic-unit">元</span>
+                  </div>
+                </div>
               </a-card>
             </a-col>
           </a-row>
@@ -506,6 +503,7 @@ export default {
           console.log(JSON.stringify(this.studentTitleData))
           this.scheduleInfo = r.data.scheduleList
           this.registerList = r.data.registerList
+          this.doctorInfo = r.data.doctorInfo
           // this.studentTitleData = titleData
           // this.newsList = r.data.bulletin
           // this.messageList = r.data.message
@@ -548,5 +546,251 @@ export default {
   height: 150px;
   line-height: 150px;
   overflow: hidden;
+}
+
+.doctor-info-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ffffff, #f5f7fa);
+}
+
+.doctor-avatar {
+  border: 3px solid #1890ff;
+  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.2);
+}
+
+.doctor-details {
+  padding-left: 20px;
+}
+
+.doctor-name {
+  font-size: 22px;
+  font-family: 'Microsoft YaHei', SimHei;
+  font-weight: bold;
+  color: #1890ff;
+  margin-bottom: 8px;
+}
+
+.doctor-hospital, .doctor-office, .doctor-title {
+  font-size: 14px;
+  font-family: 'Microsoft YaHei', SimHei;
+  margin: 4px 0;
+  color: #666;
+}
+
+/* 排班标题样式 */
+.section-title {
+  font-size: 22px;
+  font-family: 'Microsoft YaHei', SimHei;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  color: #1890ff;
+  position: relative;
+  padding-left: 15px;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 4px;
+  height: 22px;
+  background: #1890ff;
+  border-radius: 2px;
+}
+
+/* 日历容器样式 */
+.calendar-container {
+  background: #f0f2f5;
+  padding: 30px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.custom-calendar {
+  border: none;
+}
+
+.event-item {
+  margin: 2px 0;
+}
+
+.event-badge {
+  font-size: 12px;
+}
+
+/* 待挂号卡片样式 */
+.register-card {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.register-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.register-meta >>> .ant-card-meta-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #1890ff;
+}
+
+.register-meta >>> .ant-card-meta-description {
+  font-size: 13px;
+  color: #666;
+}
+
+.register-details {
+  font-size: 12px;
+  font-family: 'Microsoft YaHei', SimHei;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #e8e8e8;
+}
+
+.time-slot {
+  color: #52c41a;
+  font-weight: 500;
+}
+
+.contact-info {
+  color: #fa8c16;
+}
+
+.doctor-name-highlight {
+  color: #f5222d;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* 响应式调整 */
+@media (max-width: 1200px) {
+  .register-card {
+    margin-bottom: 20px;
+  }
+}
+
+.empty-register-state {
+  padding: 40px 0;
+  background: #fafafa;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.empty-register-state >>> .ant-empty-image {
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.empty-register-state >>> .ant-empty-description {
+  color: #999;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.empty-description {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.statistic-card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border: none;
+}
+
+.statistic-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.statistic-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  float: left;
+  margin-right: 15px;
+  margin-top: 5px;
+}
+
+.schedule-icon {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.register-icon {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+}
+
+.prescription-icon {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+}
+
+.income-icon {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  color: white;
+}
+
+.statistic-content {
+  overflow: hidden;
+}
+
+.statistic-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  font-family: 'Microsoft YaHei', SimHei;
+}
+
+.statistic-value {
+  font-size: 26px;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Microsoft YaHei', SimHei;
+}
+
+.statistic-unit {
+  font-size: 18px;
+  color: #999;
+  margin-left: 2px;
+}
+
+/* 响应式优化 */
+@media (max-width: 1200px) {
+  .statistic-value {
+    font-size: 22px;
+  }
+
+  .statistic-unit {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 992px) {
+  .statistic-card {
+    margin-bottom: 20px;
+  }
 }
 </style>

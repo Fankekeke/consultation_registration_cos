@@ -70,6 +70,7 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
+          <a-icon type="audit" @click="handleUserViewOpen(record)" title="详 情" style="margin-right: 10px"></a-icon>
           <a-icon v-if="record.status == 1" type="cloud" @click="handleViewOpen(record)" title="详 情"></a-icon>
 <!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>-->
         </template>
@@ -93,6 +94,11 @@
       :registerShow="registerView.visiable"
       :registerData="registerView.data">
     </register-view>
+    <user-view
+      @close="handleUserViewClose"
+      :userShow="userView.visiable"
+      :userData="userView.data">
+    </user-view>
   </a-card>
 </template>
 
@@ -101,15 +107,20 @@ import RangeDate from '@/components/datetime/RangeDate'
 import registerAdd from './RegisterAdd.vue'
 import registerEdit from './RegisterEdit.vue'
 import registerView from './RegisterView.vue'
+import userView from './UserView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'register',
-  components: {registerAdd, registerEdit, registerView, RangeDate},
+  components: {registerAdd, registerEdit, registerView, userView, RangeDate},
   data () {
     return {
+      userView: {
+        visiable: false,
+        data: null
+      },
       advanced: false,
       registerAdd: {
         visiable: false
@@ -253,6 +264,13 @@ export default {
     this.fetch()
   },
   methods: {
+    handleUserViewOpen (row) {
+      this.userView.data = row
+      this.userView.visiable = true
+    },
+    handleUserViewClose () {
+      this.userView.visiable = false
+    },
     handleViewOpen (row) {
       this.registerView.data = row
       this.registerView.visiable = true
